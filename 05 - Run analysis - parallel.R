@@ -10,7 +10,7 @@
 
 res_dir   <- "results"
 rng_kind  <- "default"
-n_workers <- 4           # Maximum parallel worker processes
+n_cores   <- 4           # Maximum parallel cores to use
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PACKAGES AND FILES
@@ -185,12 +185,12 @@ if (length(datasets_to_process) > 0) {
   cat("RUNNING IN PARALLEL\n")
   cat(strrep("=", 70), "\n")
 
-  # Determine number of workers
-  n_cores <- min(n_workers, length(datasets_to_process))
-  cat("Using", n_cores, "cores\n")
+  # Determine number of cores to use
+  n_cl <- min(n_cores, length(datasets_to_process))
+  cat("Using", n_cl, "cores\n")
 
   # Create cluster for parallel workers
-  cl <- makeCluster(n_cores)
+  cl <- makeCluster(n_cl)
 
   # Explicitly export necessary global variables into the isolated node spaces
   clusterExport(
