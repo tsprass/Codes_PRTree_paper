@@ -1,0 +1,35 @@
+Datasets tested during the project that are NOT part of the main analysis in the paper
+=====================================================================================
+
+These datasets were tried at some point and were removed from
+"04 - Prepare datasets.R". They are kept here only as a record.
+Sizes are given as (instances, features), as noted in the original script.
+
+Datasets with natural missing values
+------------------------------------
+- Bone marrow transplant: children  UCI id 565  (187, 36)   [BoneMarrow]
+- Tennis Major Tournament Match Statistics  UCI id 300  (127, 42)   [Tennis]
+
+Datasets without missing values (very large n)
+----------------------------------------------
+- Superconductivty Data  UCI id 464  (21263, 81)   [Super]
+- Bike Sharing  UCI id 275  (17389, 13)   [Bike]
+
+Datasets without missing values (large n)
+-----------------------------------------
+- Combined Cycle Power Plant  UCI id 294  (9568, 4)   [Power]
+- Air Quality  UCI id 360  (9358, 15)   [AirQuality]
+
+Datasets without missing values (medium n)
+------------------------------------------
+- Abalone  UCI id 1  (4177, 8)   [Abalone]
+- Airfoil Self-Noise  UCI id 291  (1503, 5)   [Airfoil]
+- Concrete Compressive Strength  UCI id 165  (1030, 8)   [Concrete]
+  NOTE: not used in the main analysis, but it IS used in the semi-synthetic
+  studies (scripts 07 to 09), read from data/individual_complete/.
+
+Datasets without missing values (small n)
+-----------------------------------------
+- Energy Efficiency  UCI id 242  (768, 8)   [Energy]
+- Hitters  R package ISLR  (322, 20), response "Salary"   [Hitters]
+- Boston Housing  R package MASS  (506, 14), response "medv"   [Boston]
