@@ -16,7 +16,6 @@ n_workers <- 4           # Maximum parallel worker processes
 # PACKAGES AND FILES
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 library(parallel)
-library(pbapply)
 library(dplyr)
 library(purrr)
 
@@ -221,10 +220,8 @@ if (length(datasets_to_process) > 0) {
     setwd(wd)
     NULL
   })
-  # Run the native sifting array loop
-
-  pboptions(type = "timer")
-
+  # Execute tasks with load balancing across workers (parLapplyLB handles
+  # uneven dataset runtimes dynamically to prevent timeouts)
   out <- parallel::parLapplyLB(
     cl,
     datasets_to_process,

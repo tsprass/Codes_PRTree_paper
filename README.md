@@ -50,6 +50,6 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 
 ## Requirements
 
-R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `ucimlrepo`, `purrr`, `mlbench`, `parallel`, `pbapply`, `rpart`, `tibble` and `PRTree`.
+R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `ucimlrepo`, `purrr`, `mlbench`, `parallel`, `rpart`, `tibble` and `PRTree`.
 
 `get_folds()` calls the internal function `PRTree:::.sample.stratified_folds`, which is not exported, so results may depend on the installed PRTree version.
