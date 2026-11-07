@@ -10,7 +10,7 @@ if (!dir.exists("data")) { dir.create("data") }
 #-----------------------------------------------------------------------------
 fetch_uci_metadata <- function(id) {
 
-  cat("  ID", id, "- Buscando...")
+  cat("  ID", id, "- Searching...")
 
   # API URL (no trailing slash)
   api_url <- paste0("https://archive.ics.uci.edu/api/dataset?id=", id)
@@ -19,13 +19,13 @@ fetch_uci_metadata <- function(id) {
   response <- tryCatch({
     jsonlite::fromJSON(api_url)
   }, error = function(e) {
-    cat(" Erro de conexão\n")
+    cat(" Request failed\n")
     return(NULL)
   })
 
   # Check whether the response is valid
   if (is.null(response) || response$status != 200) {
-    cat(" Não encontrado\n")
+    cat(" Dataset not found or API returned a non-200 status\n")
     return(NULL)
   }
 
@@ -36,11 +36,11 @@ fetch_uci_metadata <- function(id) {
   name <- ifelse(is.null(d$name), NA, d$name)
 
   if (is.na(name)) {
-    cat(" Sem nome\n")
+    cat(" Dataset name unavailable\n")
     return(NULL)
   }
 
-  cat(" Encontrado:", name, "\n")
+  cat(" Found:", name, "\n")
 
   # Process tasks (may be a list or a vector)
   tasks <- if (!is.null(d$tasks)) {
@@ -122,13 +122,13 @@ scan_uci_datasets <- function(max_id = 700, delay = 0.2) {
   all_results <- list()
   found_count <- 0
 
-  cat("\n🔍 Escaneando IDs de 1 até", max_id, "...\n\n")
+  cat("\n🔍 Scanning IDs from 1 to", max_id, "...\n\n")
 
   for (id in 1:max_id) {
 
     # Show progress every 50 IDs
     if (id %% 50 == 0) {
-      cat("\n  Progresso: ID", id, "/", max_id, "- Encontrados:", found_count, "datasets\n")
+      cat("\n  Progress: ID", id, "/", max_id, "- Found:", found_count, "datasets\n")
     }
 
     # Fetch metadata
@@ -144,7 +144,7 @@ scan_uci_datasets <- function(max_id = 700, delay = 0.2) {
         partial_df <- dplyr::bind_rows(all_results)
         saveRDS(partial_df, "data/uci_metadata_partial.rds")
         write.csv(partial_df, "data/uci_metadata_partial.csv", row.names = FALSE)
-        cat("    💾 Progresso salvo -", found_count, "datasets encontrados\n")
+        cat("    💾 Progress saved -", found_count, "datasets found\n")
       }
     }
 
@@ -152,8 +152,8 @@ scan_uci_datasets <- function(max_id = 700, delay = 0.2) {
     Sys.sleep(delay)
   }
 
-  cat("\n✅ Escaneamento completo!\n")
-  cat("📊 Total de datasets encontrados:", found_count, "de", max_id, "\n")
+  cat("\n✅ Scan complete!\n")
+  cat("📊 Total datasets found:", found_count, "of", max_id, "\n")
 
   # Combine all results
   if (found_count > 0) {
@@ -169,16 +169,16 @@ scan_uci_datasets <- function(max_id = 700, delay = 0.2) {
 #-----------------------------------------------------------------------------
 
 # Scan IDs from 1 to 700
-resultados <- scan_uci_datasets(max_id = 700, delay = 0.2)
+results <- scan_uci_datasets(max_id = 700, delay = 0.2)
 
 #-----------------------------------------------------------------------------
 # PROCESS AND FILTER RESULTS
 #-----------------------------------------------------------------------------
 
-if (!is.null(resultados)) {
+if (!is.null(results)) {
 
   # Clean data
-  resultados <- resultados %>%
+  results <- results %>%
     dplyr::mutate(
       instances = as.numeric(instances),
       features = as.numeric(features),
@@ -195,12 +195,12 @@ if (!is.null(resultados)) {
   #-----------------------------------------------------------------------------
 
   # Save full results
-  saveRDS(resultados, "data/uci_all_metadata.rds")
-  write.csv(resultados, "data/uci_all_metadata.csv", row.names = FALSE)
+  saveRDS(results, "data/uci_all_metadata.rds")
+  write.csv(results, "data/uci_all_metadata.csv", row.names = FALSE)
 
-  cat("\n💾 Todos os dados salvos na pasta 'data/'\n")
-  cat("   - uci_all_metadata.csv (todos os datasets)\n")
+  cat("\n💾 All data saved in the 'data/' folder\n")
+  cat("   - uci_all_metadata.csv (all datasets)\n")
 
 } else {
-  cat("\n❌ Nenhum dataset encontrado. Verifique sua conexão.\n")
+  cat("\n❌ No datasets found. Check API availability or the ID range.\n")
 }
