@@ -54,7 +54,7 @@ if ("Crime" %in% names(datasets)) {
 # Add R datasets
 cat("Adding R datasets...\n")
 
-# Add Ozone --- small (587 13)
+# Add Ozone --- small (366, 13)
 # V4 (daily maximum one-hour-average ozone) is the response. V1-V3 (month,
 # day of month and day of week) are factors and are dropped by prepare_data().
 data(Ozone, package = "mlbench")
