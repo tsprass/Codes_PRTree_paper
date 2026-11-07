@@ -13,7 +13,7 @@ Run the scripts from the repository root, in numeric order.
 | File | Description |
 |---|---|
 | `01 - Pre-processing.R` *(optional)* | Queries the UCI Machine Learning Repository API (dataset IDs 1 to 700) and collects the metadata of each dataset: name, number of instances/features, tasks, area, feature types, missing-value flag, target column(s) and data URL. Saves the result to `data/uci_all_metadata.rds` and `data/uci_all_metadata.csv`. Partial results are saved every 20 datasets found. |
-| `02 - Filter.R` *(optional)* | Exploratory script for the metadata. Loads `data/uci_all_metadata.rds` and filters the datasets: regression tasks with missing values (`with_missing`) and regression tasks with 300 to 30,000 instances and 3 to 99 features (`regression_metadata`). Also prints summary statistics and plots the distributions of instances, features, missing values and target availability. |
+| `02 - Filter.R` *(optional)* | Exploratory script for the metadata. Loads `data/uci_all_metadata.rds` and filters the datasets: regression tasks with missing values (`with_missing`) and regression tasks with more than 300 and fewer than 30,000 instances and 3 to 99 features (`regression_metadata`). Also prints summary statistics and plots the distributions of instances, features, missing values and target availability. |
 | `03 - functions.R` | Helper functions sourced by the analysis scripts (see below). Not meant to be run on its own. |
 
 ### Functions in `03 - functions.R`
