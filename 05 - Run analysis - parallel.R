@@ -23,7 +23,7 @@ library(purrr)
 # Load required functions
 source("03 - functions.R")
 
-# Set the directories for individual data and results 
+# Set the directories for individual data and results
 wd <- getwd()
 data_dir <- "data/individual"
 
@@ -72,7 +72,6 @@ dist_grid <- tribble(
   # Gamma
   # shape controls asymmetry
   "gamma",  NA,  0.5,    NA,
-  #"gamma",  NA,  1.0,    NA,
   "gamma",  NA,  2.0,    NA,
   "gamma",  NA,  5.0,    NA
 )
@@ -83,9 +82,9 @@ dist_grid <- tribble(
 # List of datasets sorted by n (smallest to largest); all have natural missing values
 dataset_names <- c(
   "Automobile",   # 205 rows, 17 features
-  "Ozone",        # 361 rows, 9 features  
-  "Auto",          # 398 rows, 7 features  
-  "Garment",      # 1,197 rows, 14 features  
+  "Ozone",        # 361 rows, 9 features
+  "Auto",          # 398 rows, 7 features
+  "Garment",      # 1,197 rows, 14 features
   "Crime"         # 1,994 rows, 122 features
 )
 
@@ -110,7 +109,7 @@ cat("Remaining:", length(datasets_to_process), "\n")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 run_single_dataset <- function(name, config, data_dir, prop_min, seed,
                                dist_grid, res_dir, wd) {
-  
+
   log_file <- file.path(res_dir, paste0(name, ".log"))
   zz <- file(log_file, open = "wt")
   sink(zz)
@@ -120,13 +119,13 @@ run_single_dataset <- function(name, config, data_dir, prop_min, seed,
     sink()
     close(zz)
   }, add = TRUE)
-  
+
   tryCatch({
     cat("\n", strrep("=", 70), "\n")
     cat("DATASET:", name, "\n")
     cat("START :", as.character(Sys.time()), "\n")
     cat(strrep("=", 70), "\n\n")
-    
+
     data <- readRDS(file.path(data_dir, paste0(name, ".rds")))
     cfg <- config
     n_train <- (cfg$n_rep - 1) * nrow(data$X) / cfg$n_rep
@@ -134,16 +133,16 @@ run_single_dataset <- function(name, config, data_dir, prop_min, seed,
     cfg$n_min <- nmin(prop = prop_min, n_train = n_train)
     cfg$minsplit <- cfg$n_min
     cfg$n_candidates <- as.integer(max(round(ncol(data$X)/2), 3))
-    
+
     cat("n            =", nrow(data$X), "\n")
     cat("p            =", ncol(data$X), "\n")
     cat("minsplit     =", cfg$minsplit, "\n")
     cat("n_candidates =", cfg$n_candidates, "\n\n")
-    
+
     cat("[", Sys.time(), "] Generating folds...\n")
     set.seed(seed)
     cfg$fold_idx <- get_folds(config = cfg, seed = seed, X = data$X)
-    
+
     cat("[", Sys.time(), "] Running experiment...\n")
     result <- run_dataset_experiment(
       data = data,
@@ -152,28 +151,28 @@ run_single_dataset <- function(name, config, data_dir, prop_min, seed,
       seed = seed,
       dist_grid = dist_grid
     )
-    
+
     cat("[", Sys.time(), "] Saving results...\n")
     saveRDS(result, file.path(res_dir, paste0(name, ".rds")))
-    
+
     rm(result)
     gc(verbose = FALSE)
-    
+
     cat("\n", strrep("=", 70), "\n")
     cat("FINISHED:", name, "\n")
     cat("END     :", as.character(Sys.time()), "\n")
     cat(strrep("=", 70), "\n")
-    
+
     return(name)
-    
+
   }, error = function(e) {
-    
+
     cat("\n", strrep("=", 70), "\n")
     cat("ERROR IN:", name, "\n")
     cat("TIME    :", as.character(Sys.time()), "\n")
     cat("MESSAGE :", e$message, "\n")
     cat(strrep("=", 70), "\n")
-    
+
     return(NULL)
   })
 }
@@ -181,19 +180,19 @@ run_single_dataset <- function(name, config, data_dir, prop_min, seed,
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PARALLEL EXECUTION
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (length(datasets_to_process) > 0) { 
+if (length(datasets_to_process) > 0) {
   # Print the current status
   cat("\n", strrep("=", 70), "\n")
   cat("RUNNING IN PARALLEL\n")
   cat(strrep("=", 70), "\n")
-  
+
   # Determine number of workers
   n_cores <- min(n_workers, length(datasets_to_process))
   cat("Using", n_cores, "cores\n")
-  
+
   # Create cluster for parallel workers
   cl <- makeCluster(n_cores)
-  
+
   # Explicitly export necessary global variables into the isolated node spaces
   clusterExport(
     cl,
@@ -210,7 +209,7 @@ if (length(datasets_to_process) > 0) {
       "rng_kind"
     )
   )
-  
+
   # Initialize background workers
   clusterEvalQ(cl, {
     RNGkind(rng_kind)
@@ -223,9 +222,9 @@ if (length(datasets_to_process) > 0) {
     NULL
   })
   # Run the native sifting array loop
-  
+
   pboptions(type = "timer")
-  
+
   out <- parallel::parLapplyLB(
     cl,
     datasets_to_process,
@@ -238,18 +237,18 @@ if (length(datasets_to_process) > 0) {
     res_dir = res_dir,
     wd = wd
   )
-  
+
   # Check for failed datasets
   failed_datasets <- datasets_to_process[vapply(out, is.null, logical(1))]
   if (length(failed_datasets) > 0) {
     warning("The following datasets failed to process (check their .log files): ",
             paste(failed_datasets, collapse = ", "), immediate. = TRUE)
   }
-  
+
   # Stop parallel cluster
   stopCluster(cl)
   cat("\nParallel execution complete.\n")
-} 
+}
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cat("\n", strrep("=", 70), "\n")
