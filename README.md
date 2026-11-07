@@ -22,6 +22,7 @@ Scripts used to produce the results of the paper.
 | File | Description |
 |---|---|
 | `03 - functions.R` | Helper functions sourced by the analysis scripts (see below). Not meant to be run on its own. |
+| `04 - Prepare datasets.R` | Downloads the datasets with missing values used in the main analysis from the UCI repository (`Crime`, `Garment`, `Auto`, `Automobile`) and adds `Ozone` from the `mlbench` package. For `Crime`, the 5 non-predictive attributes documented by UCI are dropped. Each dataset is prepared with `prepare_data()` and saved to `data/individual/`. Prints a summary table (response, n, p and percentage of missing values). |
 
 ### Functions in `03 - functions.R`
 
@@ -48,6 +49,6 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 
 ## Requirements
 
-R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `ucimlrepo`, `rpart`, `tibble` and `PRTree`.
+R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `ucimlrepo`, `purrr`, `mlbench`, `rpart`, `tibble` and `PRTree`.
 
 `get_folds()` calls the internal function `PRTree:::.sample.stratified_folds`, which is not exported, so results may depend on the installed PRTree version.
