@@ -24,6 +24,7 @@ Scripts used to produce the results of the paper.
 | `03 - functions.R` | Helper functions sourced by the analysis scripts (see below). Not meant to be run on its own. |
 | `04 - Prepare datasets.R` | Downloads the datasets with missing values used in the main analysis from the UCI repository (`Crime`, `Garment`, `Auto`, `Automobile`) and adds `Ozone` from the `mlbench` package. For `Crime`, the 5 non-predictive attributes documented by UCI are dropped. Each dataset is prepared with `prepare_data()` and saved to `data/individual/`. Prints a summary table (response, n, p and percentage of missing values). |
 | `05 - Run analysis - parallel.R` | Runs 15-fold cross-validation of CART and PRTree (across combinations of fill types, proxy criteria, and distributions) in parallel for each dataset in `data/individual/`. Saves individual results in `results/<dataset>.rds`, detailed execution logs in `results/<dataset>.log`, and consolidates all results into `results/prtree_cart_raw.rds` and `.csv`. Supports checkpointing/resuming. |
+| `05 - Run analysis - Garment wip diagnostics.R` | Diagnostic complement to script 5 for the Garment dataset. Evaluates PRTree and CART across 6 controlled conditions (with/without the `wip` predictor, different smoothing levels, split support constraints, and discrete-variable smoothing) under the same 15 folds to investigate why PRTree did not outperform CART on this dataset. Saves results to `results_garment_wip/`. |
 
 ### Functions in `03 - functions.R`
 
