@@ -40,7 +40,7 @@ Scripts used to produce the results of the paper.
 
 The `config` argument of these functions is the object created by `PRTree::pr_tree_control_cv()` (it accepts any argument of `PRTree::pr_tree_control()`, plus `method`, `n_rep` and `stratify`).
 
-## Data
+## Data and Results
 
 | Path | Description |
 |---|---|
@@ -48,6 +48,7 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 | `data/individual/` | Datasets with missing values used in the main analysis: `Crime` (UCI 183), `Garment` (UCI 597), `Auto` (UCI 9), `Automobile` (UCI 10) and `Ozone` (`mlbench`). |
 | `data/individual_complete/` | Complete (no missing values) datasets used in the semi-synthetic studies: `Concrete` (UCI 165). |
 | `datasets_tested_not_in_paper.txt` | Record of the datasets that were tested during the project but are not part of the main analysis in the paper. |
+| `results/` | Output from `05 - Run analysis - parallel.R`: per-dataset `.rds` and `.log` files, plus consolidated outputs `prtree_cart_raw.rds` and `prtree_cart_raw.csv`. |
 
 ## Requirements
 
