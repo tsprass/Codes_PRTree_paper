@@ -31,7 +31,7 @@ library(purrr)
 source("03 - functions.R")
 
 seed    <- 1234
-n_cores <- 4
+n_cores <- 8
 res_dir <- "results_garment_wip"
 out_file <- file.path(res_dir, "Garment_wip_diagnostics.rds")
 csv_file  <- file.path(res_dir, "Garment_wip_diagnostics.csv")

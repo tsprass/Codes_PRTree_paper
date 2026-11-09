@@ -1,0 +1,271 @@
+---
+title: "PRTree: Exploratory Semi-Synthetic Studies (07 & 08)"
+subtitle: "Sensitivity Analyses: Standard Missingness vs. Two-Tail Selection in Strong Predictors"
+author: "PRTree Paper Project"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
+    theme: cosmo
+    highlight: tango
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(purrr)
+library(knitr)
+library(ggpubr)
+library(tibble)
+
+# Common styling and labels
+labels <- c(Auto = "Auto MPG", Ozone = "Ozone", Concrete = "Concrete")
+
+short <- c(
+  "CART-full" = "CART-full", "PR-full" = "full", "PR-f0" = "f0", "PR-f1" = "f1", "PR-f2" = "f2",
+  "mean+PR" = "mean", "kNN+PR" = "kNN", "missForest+PR" = "mF",
+  "MICE+PR" = "MICE", "MICE1+PR" = "MICE1", "MICEavg+PR" = "MICEavg",
+  "CART-sur" = "CART-sur", "mean+CART" = "mean+CART", "kNN+CART" = "kNN+CART",
+  "missForest+CART" = "mF+CART", "MICE+CART" = "MICE+CART",
+  "MICE1+CART" = "MICE1+CART", "MICEavg+CART" = "MICEavg+CART"
+)
+
+all_cols <- c(
+  "PR-f2" = "#CC0000", "MICE+PR" = "#6A3D9A", "missForest+PR" = "#009E73",
+  "kNN+PR" = "#0072B2", "MICEavg+PR" = "#E69F00", "MICE1+PR" = "#CC79A7",
+  "mean+PR" = "#999999", "MICE+CART" = "#56B4E9", "missForest+CART" = "#A6D96A",
+  "kNN+CART" = "#9ECAE1", "MICEavg+CART" = "#FDD49E", "MICE1+CART" = "#F1B6DA",
+  "mean+CART" = "#D9D9D9", "CART-sur" = "#444444", "PR-f1" = "#F4A582", "PR-f0" = "#B2182B"
+)
+
+# Helper function to generate plots from a study results folder
+process_study_data <- function(res_dir) {
+  datasets <- c("Auto", "Ozone", "Concrete")
+  files <- file.path(res_dir, paste0(datasets, ".rds"))
+  
+  d <- bind_rows(lapply(files, readRDS)) %>%
+    mutate(dataset = factor(labels[dataset], labels),
+           mech = factor(mech, c("MCAR", "MAR", "MNAR")))
+  
+  w <- d %>%
+    select(dataset, mech, rate, rep, fold, method, rmse) %>%
+    pivot_wider(names_from = method, values_from = rmse)
+  
+  loss <- d %>%
+    group_by(dataset, mech, rate, rep, fold) %>%
+    mutate(E = rmse / rmse[method == "PR-full"] - 1) %>%
+    ungroup() %>%
+    filter(!method %in% c("PR-full", "CART-full"))
+  
+  ranking <- loss %>%
+    inner_join(loss, by = c("dataset", "mech", "rate", "rep", "fold")) %>%
+    filter(method.x != method.y) %>%
+    group_by(method = method.x) %>%
+    summarise(win = mean(rmse.x < rmse.y), .groups = "drop") %>%
+    arrange(desc(win))
+  
+  best <- head(ranking$method, 6)
+  if (!"PR-f2" %in% best) best <- c(head(best, 5), "PR-f2")
+  best <- ranking$method[ranking$method %in% best]
+  
+  list(d = d, w = w, loss = loss, best = best)
+}
+
+plot_study_boxplots <- function(st) {
+  bx <- st$loss %>%
+    filter(method %in% st$best) %>%
+    mutate(method = factor(short[method], short[st$best]),
+           rate_lab = factor(paste0(100 * rate, "%"), paste0(c(10, 25, 40), "%")))
+  
+  cols <- setNames(all_cols[st$best], short[st$best])
+  
+  ggplot(bx, aes(rate_lab, E, fill = method)) +
+    geom_hline(yintercept = 0, colour = "grey30", linewidth = 0.4) +
+    geom_boxplot(alpha = 0.85, outlier.size = 0.4, linewidth = 0.3,
+                 position = position_dodge(width = 0.85), width = 0.75) +
+    scale_fill_manual(values = cols, name = NULL) +
+    facet_grid(dataset ~ mech, scales = "free_y") +
+    labs(x = "Proportion of incomplete rows (r)", y = "RMSE / RMSE(PRTree, complete) - 1") +
+    theme_bw(base_size = 12) +
+    theme(legend.position = "bottom", panel.grid.minor = element_blank(),
+          strip.text = element_text(face = "bold")) +
+    guides(fill = guide_legend(nrow = 1))
+}
+
+plot_study_heatmaps <- function(st) {
+  comp <- c("PR-f0", "PR-f1", "CART-sur", "mean+PR", "kNN+PR", "missForest+PR",
+            "MICE+PR", "MICE1+PR", "MICEavg+PR", "MICE+CART")
+  
+  hw <- st$w %>%
+    pivot_longer(all_of(comp), names_to = "competitor", values_to = "rmse_c") %>%
+    group_by(dataset, mech, rate, competitor) %>%
+    summarise(win = mean(`PR-f2` < rmse_c), .groups = "drop") %>%
+    mutate(competitor = factor(short[competitor], rev(short[comp])),
+           col = factor(paste0(mech, "\n", 100 * rate, "%"),
+                        paste0(rep(c("MCAR", "MAR", "MNAR"), each = 3), "\n",
+                               rep(c(10, 25, 40), 3), "%")))
+  
+  hm <- lapply(levels(hw$dataset), function(ds) {
+    dat <- filter(hw, dataset == ds)
+    ggplot(dat, aes(col, competitor, fill = win)) +
+      geom_tile(colour = "white") +
+      geom_text(aes(label = sprintf("%.0f%%", 100 * win)), size = 3.5) +
+      scale_fill_gradient2(low = "#D55E00", mid = "white", high = "#0072B2",
+                           midpoint = 0.5, limits = c(0, 1), name = "PR-f2 win rate") +
+      labs(title = ds, x = NULL, y = NULL) +
+      theme_bw(base_size = 11) +
+      theme(panel.grid = element_blank(), plot.title = element_text(face = "bold", size = 12))
+  })
+  
+  leg <- ggpubr::get_legend(hm[[1]] + guides(fill = guide_colorbar(
+    direction = "horizontal", title.position = "top", barwidth = unit(10, "cm"), barheight = unit(1, "cm"))))
+  
+  hm_noleg <- lapply(hm, function(p) p + theme(legend.position = "none"))
+  
+  ggpubr::ggarrange(
+    hm_noleg[[1]], hm_noleg[[2]], hm_noleg[[3]], ggpubr::as_ggplot(leg),
+    ncol = 2, nrow = 2
+  )
+}
+
+make_summary_table <- function(st, caption) {
+  st$loss %>%
+    filter(method %in% st$best) %>%
+    group_by(dataset, mech, rate, method) %>%
+    summarise(med = median(E), iqr = IQR(E), .groups = "drop") %>%
+    group_by(dataset, mech, rate) %>%
+    mutate(is_best = (round(med, 2) == min(round(med, 2)))) %>%
+    ungroup() %>%
+    mutate(
+      cell = ifelse(
+        is_best,
+        sprintf("**%.2f** (%.2f)", med, iqr),
+        sprintf("%.2f (%.2f)", med, iqr)
+      ),
+      method = factor(short[method], short[st$best]),
+      rate = paste0(100 * rate, "%")
+    ) %>%
+    select(Dataset = dataset, Mechanism = mech, Rate = rate, method, cell) %>%
+    pivot_wider(names_from = method, values_from = cell) %>%
+    knitr::kable(caption = caption)
+}
+```
+
+## Executive Summary
+
+This report compiles the **exploratory semi-synthetic simulation experiments** that served as stepping stones prior to the final specification adopted in Section 6 of the paper (*Upper-Tail MNAR Missingness*):
+
+1. **Study 07 (`results_semisynthetic_mech/`):** Missing values are induced across **all predictors** under standard MCAR, MAR, and two-tail MNAR mechanisms.
+2. **Study 08 (`results_semisynthetic_strong/`):** Missingness is selectively injected into the **strongest predictors** (highest variance / correlation), removing observations from **both tails** (lowest and highest values) under MNAR.
+3. **Relation to Study 09 (Main Paper):** Study 09 refines Study 08 by restricting the MNAR mechanism to the **upper tail only** (simulating detection/saturation thresholds), which represents the most realistic and asymmetric degradation benchmark.
+
+Both experiments evaluate the three benchmark datasets with complete covariates (**Auto MPG**, **Ozone**, and **Concrete**) across missingness rates $r \in \{10\%, 25\%, 40\%\}$ over 10 independent replications and 5 folds (50 evaluation runs per condition).
+
+---
+
+## 1. Study 07: Standard Missingness Across All Predictors
+
+In this study, missing values were induced across all predictors indiscriminately.
+
+```{r load_study07}
+st07 <- process_study_data("results_semisynthetic_mech")
+```
+
+### Relative Prediction Error vs. Complete-Data Benchmark
+
+Relative error is defined as:
+$$\Delta_{\text{full}} = \frac{\text{RMSE} - \text{RMSE}_{\text{PR-full}}}{\text{RMSE}_{\text{PR-full}}}$$
+
+```{r plot07_boxplots, fig.width=11, fig.height=8}
+plot_study_boxplots(st07)
+```
+
+### Win-Rate Heatmaps (PR-f2 vs. Competitors)
+
+Pairwise win rate represents the proportion of folds in which `PR-f2` achieved a lower RMSE than each respective competitor:
+
+```{r plot07_heatmaps, fig.width=12, fig.height=9}
+plot_study_heatmaps(st07)
+```
+
+### Median Relative Error Summary Table
+
+```{r table07}
+make_summary_table(
+  st07,
+  caption = "Study 07: Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
+)
+```
+
+---
+
+## 2. Study 08: Missingness in Strong Predictors (Two-Tail MNAR)
+
+In this study, missingness is concentrated selectively in the **most informative half of the predictors**, removing from **both tails** (lowest and highest observations) under MNAR.
+
+```{r load_study08}
+st08 <- process_study_data("results_semisynthetic_strong")
+```
+
+### Relative Prediction Error vs. Complete-Data Benchmark
+
+```{r plot08_boxplots, fig.width=11, fig.height=8}
+plot_study_boxplots(st08)
+```
+
+### Win-Rate Heatmaps (PR-f2 vs. Competitors)
+
+```{r plot08_heatmaps, fig.width=12, fig.height=9}
+plot_study_heatmaps(st08)
+```
+
+### Median Relative Error Summary Table
+
+```{r table08}
+make_summary_table(
+  st08,
+  caption = "Study 08: Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
+)
+```
+
+---
+
+## 3. Comparative Synthesis: 07 vs. 08 vs. 09
+
+| Dimension | Study 07 (`mech`) | Study 08 (`strong`) | Study 09 (`upper` - Main Paper) |
+|:---|:---|:---|:---|
+| **Affected Predictors** | All predictors ($p$) | Strongest $\lfloor p/2 \rfloor$ predictors | Strongest $\lfloor p/2 \rfloor$ predictors |
+| **Fully Observed Predictors** | None (all subject to missingness) | Complementary $\lceil p/2 \rceil$ predictors | Complementary $\lceil p/2 \rceil$ predictors |
+| **MAR Deletion Rule** | Bilateral: conditioned on extreme absolute values ($\|Z\|$) of guide variables | Bilateral: conditioned on extreme absolute values ($\|Z\|$) of observed predictors | Unilateral: conditioned on high positive values ($Z$) of observed predictors |
+| **MNAR Deletion Rule** | Two-tail: lowest and highest values removed from each predictor | Two-tail: lowest and highest values removed from strong predictors | Upper-tail only: highest values removed from strong predictors (simulates sensor saturation) |
+| **Role in the Project** | Initial baseline (exploratory) | Sensitivity study (exploratory) | **Published specification (Section 6 of the paper)** |
+
+### Summary of PRTree Performance Across Studies
+
+- **Study 07 (Standard Missingness across All Features):**
+  - `PR-f2` systematically outperforms `CART-surrogate` across all datasets, missingness mechanisms (MCAR, MAR, MNAR), and loss rates ($r \in \{10\%, 25\%, 40\%\}$).
+  - Internal missing-data handling (`PR-f2`) achieves competitive RMSE with sophisticated multi-stage imputation (`MICE+PR`, `missForest+PR`), at a fraction of the computational runtime.
+  - Performance degrades smoothly as $r$ increases from 10% to 40%, demonstrating solid stability when missingness is diffuse.
+
+- **Study 08 (Missingness in Strong Predictors, Two-Tail MNAR):**
+  - Concentrating missingness in the strongest predictors increases the relative prediction error for all methods compared to Study 07.
+  - Despite the loss of key signals at both extremes, `PR-f2` preserves predictive accuracy substantially better than `CART-surrogate`.
+  - `PR-f2` remains on par with `MICE+PR` and `missForest+PR`, confirming that PRTree does not rely on weaker predictors to compensate for missing information in primary features.
+
+- **Study 09 (Main Paper — Upper-Tail MNAR in Strong Predictors):**
+  - Removing only the upper tail introduces severe asymmetric distribution shifts (censoring at high values), which particularly penalizes mean and kNN imputation.
+  - `PR-f2` demonstrates clear dominance over CART variants and matches or exceeds computationally heavy imputation pipelines.
+  - This progression confirmed the robustness of PRTree under extreme MNAR conditions, which became the cornerstone of Section 6 in the final paper.

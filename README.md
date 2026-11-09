@@ -43,6 +43,17 @@ Scripts used to produce the results of the paper.
 
 The `config` argument of these functions is the object created by `PRTree::pr_tree_control_cv()` (it accepts any argument of `PRTree::pr_tree_control()`, plus `method`, `n_rep` and `stratify`).
 
+## Supplementary material: Exploratory Semi-Synthetic Studies
+
+Exploratory studies conducted to assess PRTree performance under different missingness patterns prior to the final specification in Section 6 of the paper:
+- **Study 07 (`results_semisynthetic_mech`):** Missing values induced across all predictors indiscriminately under MCAR, MAR, and two-tail MNAR.
+- **Study 08 (`results_semisynthetic_strong`):** Missingness concentrated selectively in the strongest half of predictors ($\lfloor p/2 \rfloor$), with two-tail removal under MNAR.
+
+| File | Description |
+|---|---|
+| `Supplementary_semisynthetic_studies.Rmd` | R Markdown source generating the full comparative analysis, native ggplot2 boxplots and heatmaps, and summary tables for Studies 07 and 08. |
+| `Supplementary_semisynthetic_studies.html` | Self-contained, rendered HTML report with floating table of contents and formatted benchmark tables. Open in any browser. |
+
 ## Data and Results
 
 | Path | Description |
@@ -52,6 +63,8 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 | `data/individual_complete/` | Complete (no missing values) datasets used in the semi-synthetic studies: `Concrete` (UCI 165). |
 | `datasets_tested_not_in_paper.txt` | Record of the datasets that were tested during the project but are not part of the main analysis in the paper. |
 | `results/` | Output from `05 - Run analysis - parallel.R`: per-dataset `.rds` and `.log` files, plus consolidated outputs `prtree_cart_raw.rds` and `prtree_cart_raw.csv`. |
+| `results_semisynthetic_mech/` | Output from Study 07: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
+| `results_semisynthetic_strong/` | Output from Study 08: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
 
 ## Requirements
 

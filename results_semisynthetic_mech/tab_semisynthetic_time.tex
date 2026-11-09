@@ -1,0 +1,17 @@
+\begin{tabular}{lccc}
+\toprule
+Procedure & Auto MPG & Ozone & Concrete\\
+\midrule
+\texttt{fill\_type} = 2 & 0.53 (1.00) & 0.18 (1.00) & 1.70 (1.00)\\
+\texttt{fill\_type} = 1 & 0.54 (1.03) & 0.18 (1.01) & 1.77 (1.04)\\
+\texttt{fill\_type} = 0 & 0.47 (0.89) & 0.17 (0.97) & 1.63 (0.96)\\
+mean + PRTree & 0.47 (0.89) & 0.17 (0.93) & 1.64 (0.97)\\
+$k$NN + PRTree & 0.50 (0.93) & 0.17 (0.95) & 1.70 (1.00)\\
+missForest + PRTree & 0.85 (1.61) & 0.43 (2.38) & 2.82 (1.66)\\
+MICE$_1$ + PRTree & 0.52 (0.99) & 0.20 (1.13) & 1.72 (1.01)\\
+MICE$_{\mathrm{avg}}$ + PRTree & 0.63 (1.19) & 0.32 (1.78) & 1.89 (1.11)\\
+MICE + PRTree & 2.59 (4.88) & 1.01 (5.61) & 8.57 (5.05)\\
+CART (surrogate splits) & 0.00 (0.01) & 0.00 (0.02) & 0.01 (0.01)\\
+MICE + CART & 0.15 (0.29) & 0.17 (0.97) & 0.31 (0.18)\\
+\bottomrule
+\end{tabular}
