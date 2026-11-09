@@ -49,10 +49,12 @@ Exploratory studies conducted to assess PRTree performance under different missi
 - **Study 07 (`results_semisynthetic_mech`):** Missing values induced across all predictors indiscriminately under MCAR, MAR, and two-tail MNAR.
 - **Study 08 (`results_semisynthetic_strong`):** Missingness concentrated selectively in the strongest half of predictors ($\lfloor p/2 \rfloor$), with two-tail removal under MNAR.
 
+> 🌐 **Interactive Online Report:** [View the rendered supplementary report directly in your browser](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html) (includes floating table of contents, native ggplot2 boxplots, heatmaps, and highlighted performance tables).
+
 | File | Description |
 |---|---|
 | `Supplementary_semisynthetic_studies.Rmd` | R Markdown source generating the full comparative analysis, native ggplot2 boxplots and heatmaps, and summary tables for Studies 07 and 08. |
-| `Supplementary_semisynthetic_studies.html` | Self-contained, rendered HTML report with floating table of contents and formatted benchmark tables. Open in any browser. |
+| `Supplementary_semisynthetic_studies.html` | Self-contained, rendered HTML report with floating table of contents. [Open online via htmlpreview](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html). |
 
 ## Data and Results
 
