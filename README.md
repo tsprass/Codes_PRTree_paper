@@ -25,6 +25,9 @@ Scripts used to produce the results of the paper.
 | `04 - Prepare datasets.R` | Downloads the datasets with missing values used in the main analysis from the UCI repository (`Crime`, `Garment`, `Auto`, `Automobile`) and adds `Ozone` from the `mlbench` package. For `Crime`, the 5 non-predictive attributes documented by UCI are dropped. Each dataset is prepared with `prepare_data()` and saved to `data/individual/`. Prints a summary table (response, n, p and percentage of missing values). |
 | `05 - Run analysis - parallel.R` | Runs 15-fold cross-validation of CART and PRTree (across combinations of fill types, proxy criteria, and distributions) in parallel for each dataset in `data/individual/`. Saves individual results in `results/<dataset>.rds`, detailed execution logs in `results/<dataset>.log`, and consolidates all results into `results/prtree_cart_raw.rds` and `.csv`. Supports checkpointing/resuming. |
 | `05 - Run analysis - Garment wip diagnostics.R` | Diagnostic complement to script 5 for the Garment dataset. Evaluates PRTree and CART across 6 controlled conditions (with/without the `wip` predictor, different smoothing levels, split support constraints, and discrete-variable smoothing) under the same 15 folds to investigate why PRTree did not outperform CART on this dataset. Saves results to `results_garment_wip/`. |
+| `06 - Summaries.R` | Generates the LaTeX code for Table 1 (`tab:datasets`) in the paper, computing sample size ($n$), number of numerical predictors ($p$), response range, global missingness percentage ($m_{global}$), and number/percentage of observations with missing values ($n_{miss}$). |
+| `06 - Summaries - boxplots.R` | Reads consolidated results from `results/prtree_cart_raw.rds` and produces: (1) `delta_boxplots.pdf` (Figure 1 in paper), showing the relative error $\Delta = (\text{RMSE}_{\text{PRTree}} - \text{RMSE}_{\text{CART}}) / \text{RMSE}_{\text{CART}}$ across fill types; and (2) `heatmaps.pdf` (Figure 2 in paper), a 2D grid displaying PRTree win rates against CART for all specification combinations across datasets. |
+| `06 - summary times.R` | Parses execution logs (`results/*.log`) to evaluate computational cost. Outputs: (1) LaTeX code for Table 2 (`tab:runtime`) in the paper (CART runtime, total and range of PRTree runtimes); and (2) `heatmapsTime.pdf` (Figure 3 in paper), displaying execution time in minutes per configuration. |
 
 ### Functions in `03 - functions.R`
 
@@ -52,6 +55,6 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 
 ## Requirements
 
-R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `ucimlrepo`, `purrr`, `mlbench`, `parallel`, `rpart`, `tibble` and `PRTree`.
+R packages used by the scripts above: `dplyr`, `jsonlite`, `ggplot2`, `gridExtra`, `cowplot`, `ggpubr`, `lubridate`, `stringr`, `knitr`, `ucimlrepo`, `purrr`, `mlbench`, `parallel`, `rpart`, `tibble` and `PRTree`.
 
 `get_folds()` calls the internal function `PRTree:::.sample.stratified_folds`, which is not exported, so results may depend on the installed PRTree version.
