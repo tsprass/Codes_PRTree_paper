@@ -1,0 +1,91 @@
+"condition","fold","rmse","rmse_cart"
+"without wip, defaults",1,0.12663525646133,0.113604718709686
+"without wip, defaults",2,0.152082158354495,0.161675443594987
+"without wip, defaults",3,0.0920982470018333,0.102029397072733
+"without wip, defaults",4,0.134125940174006,0.14926814045691
+"without wip, defaults",5,0.155980347253277,0.133038063390349
+"without wip, defaults",6,0.116629475911999,0.120472456839479
+"without wip, defaults",7,0.12963275604295,0.127557219971255
+"without wip, defaults",8,0.103929754071258,0.122571687879557
+"without wip, defaults",9,0.137179568847139,0.139201092330474
+"without wip, defaults",10,0.160614141710333,0.152054812649423
+"without wip, defaults",11,0.118935318966047,0.133035470775364
+"without wip, defaults",12,0.134513955779094,0.124367058030701
+"without wip, defaults",13,0.113597482331965,0.124406401628929
+"without wip, defaults",14,0.147426681506862,0.157821179336585
+"without wip, defaults",15,0.163896698122485,0.156277597558966
+"with wip, defaults",1,0.131090013316803,0.118038571664356
+"with wip, defaults",2,0.168225648584236,0.16441757302541
+"with wip, defaults",3,0.112376208090534,0.102545623352298
+"with wip, defaults",4,0.13301961466136,0.152217815363274
+"with wip, defaults",5,0.152499445748985,0.132852959989362
+"with wip, defaults",6,0.122218479306982,0.116504074914807
+"with wip, defaults",7,0.124359125786988,0.122221699867942
+"with wip, defaults",8,0.119123826062594,0.130883754024466
+"with wip, defaults",9,0.138853542223627,0.139116861837473
+"with wip, defaults",10,0.163149928422787,0.151644265511604
+"with wip, defaults",11,0.120912117326787,0.128641371575654
+"with wip, defaults",12,0.148987644149292,0.111859803404534
+"with wip, defaults",13,0.125854314487204,0.130227166327532
+"with wip, defaults",14,0.14967102406101,0.151048160328619
+"with wip, defaults",15,0.163635283863433,0.155285140737063
+"with wip, prop_x = p_min = 0",1,0.125475859379357,0.118038571664356
+"with wip, prop_x = p_min = 0",2,0.168225648584236,0.16441757302541
+"with wip, prop_x = p_min = 0",3,0.098653297694589,0.102545623352298
+"with wip, prop_x = p_min = 0",4,0.137073372326693,0.152217815363274
+"with wip, prop_x = p_min = 0",5,0.145692794866923,0.132852959989362
+"with wip, prop_x = p_min = 0",6,0.118932443296155,0.116504074914807
+"with wip, prop_x = p_min = 0",7,0.124134568909103,0.122221699867942
+"with wip, prop_x = p_min = 0",8,0.0986310428719885,0.130883754024466
+"with wip, prop_x = p_min = 0",9,0.14179024072979,0.139116861837473
+"with wip, prop_x = p_min = 0",10,0.147965727171292,0.151644265511604
+"with wip, prop_x = p_min = 0",11,0.114155299564297,0.128641371575654
+"with wip, prop_x = p_min = 0",12,0.130253869826981,0.111859803404534
+"with wip, prop_x = p_min = 0",13,0.130067210933129,0.130227166327532
+"with wip, prop_x = p_min = 0",14,0.155687978902253,0.151048160328619
+"with wip, prop_x = p_min = 0",15,0.162020099608377,0.155285140737063
+"with wip, prop_x = p_min = 0, sigma = 0",1,0.167571718946886,0.118038571664356
+"with wip, prop_x = p_min = 0, sigma = 0",2,0.168123156592874,0.16441757302541
+"with wip, prop_x = p_min = 0, sigma = 0",3,0.13817410166773,0.102545623352298
+"with wip, prop_x = p_min = 0, sigma = 0",4,0.153598206049942,0.152217815363274
+"with wip, prop_x = p_min = 0, sigma = 0",5,0.190418339987818,0.132852959989362
+"with wip, prop_x = p_min = 0, sigma = 0",6,0.143190181116264,0.116504074914807
+"with wip, prop_x = p_min = 0, sigma = 0",7,0.155317508554916,0.122221699867942
+"with wip, prop_x = p_min = 0, sigma = 0",8,0.152581684192862,0.130883754024466
+"with wip, prop_x = p_min = 0, sigma = 0",9,0.161446391295619,0.139116861837473
+"with wip, prop_x = p_min = 0, sigma = 0",10,0.18346230818909,0.151644265511604
+"with wip, prop_x = p_min = 0, sigma = 0",11,0.173401954190756,0.128641371575654
+"with wip, prop_x = p_min = 0, sigma = 0",12,0.130136632235136,0.111859803404534
+"with wip, prop_x = p_min = 0, sigma = 0",13,0.16910514121909,0.130227166327532
+"with wip, prop_x = p_min = 0, sigma = 0",14,0.191608764001032,0.151048160328619
+"with wip, prop_x = p_min = 0, sigma = 0",15,0.186016407684989,0.155285140737063
+"with wip, prop_x = p_min = 0, grid up to 4 sd",1,0.128933835399388,0.118038571664356
+"with wip, prop_x = p_min = 0, grid up to 4 sd",2,0.142378277743162,0.16441757302541
+"with wip, prop_x = p_min = 0, grid up to 4 sd",3,0.098653297694589,0.102545623352298
+"with wip, prop_x = p_min = 0, grid up to 4 sd",4,0.143011583598555,0.152217815363274
+"with wip, prop_x = p_min = 0, grid up to 4 sd",5,0.145692794866923,0.132852959989362
+"with wip, prop_x = p_min = 0, grid up to 4 sd",6,0.120228096614684,0.116504074914807
+"with wip, prop_x = p_min = 0, grid up to 4 sd",7,0.128450097629021,0.122221699867942
+"with wip, prop_x = p_min = 0, grid up to 4 sd",8,0.0986310428719885,0.130883754024466
+"with wip, prop_x = p_min = 0, grid up to 4 sd",9,0.143434777897395,0.139116861837473
+"with wip, prop_x = p_min = 0, grid up to 4 sd",10,0.153557673884519,0.151644265511604
+"with wip, prop_x = p_min = 0, grid up to 4 sd",11,0.117753759735496,0.128641371575654
+"with wip, prop_x = p_min = 0, grid up to 4 sd",12,0.127221311777796,0.111859803404534
+"with wip, prop_x = p_min = 0, grid up to 4 sd",13,0.111604681849586,0.130227166327532
+"with wip, prop_x = p_min = 0, grid up to 4 sd",14,0.155687978902253,0.151048160328619
+"with wip, prop_x = p_min = 0, grid up to 4 sd",15,0.161661851857748,0.155285140737063
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",1,0.123626083743646,0.118038571664356
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",2,0.168225648584236,0.16441757302541
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",3,0.0957978692090007,0.102545623352298
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",4,0.136264803776163,0.152217815363274
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",5,0.150011933894777,0.132852959989362
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",6,0.114151097465359,0.116504074914807
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",7,0.134194220081378,0.122221699867942
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",8,0.10797793105341,0.130883754024466
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",9,0.145446715360742,0.139116861837473
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",10,0.148176690159974,0.151644265511604
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",11,0.117587548884163,0.128641371575654
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",12,0.131987751913872,0.111859803404534
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",13,0.114307472285889,0.130227166327532
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",14,0.14015181032351,0.151048160328619
+"with wip, prop_x = p_min = 0, sigma = 0 for discrete predictors",15,0.176740953888911,0.155285140737063

@@ -63,6 +63,7 @@ Exploratory studies conducted to assess PRTree performance under different missi
 | `data/individual_complete/` | Complete (no missing values) datasets used in the semi-synthetic studies: `Concrete` (UCI 165). |
 | `datasets_tested_not_in_paper.txt` | Record of the datasets that were tested during the project but are not part of the main analysis in the paper. |
 | `results/` | Output from `05 - Run analysis - parallel.R`: per-dataset `.rds` and `.log` files, plus consolidated outputs `prtree_cart_raw.rds` and `prtree_cart_raw.csv`. |
+| `results_garment_wip/` | Output from `05 - Run analysis - Garment wip diagnostics.R`: `Garment_wip_diagnostics.rds` and `.csv` across 6 controlled diagnostic conditions. |
 | `results_semisynthetic_mech/` | Output from Study 07: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
 | `results_semisynthetic_strong/` | Output from Study 08: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
 
