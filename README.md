@@ -48,7 +48,7 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 ## Supplementary material: Exploratory Semi-Synthetic Studies
 
 Exploratory studies conducted to assess PRTree performance under different missingness patterns prior to the final specification in Section 6 of the paper:
-- **Scenario 2 (`results_semisynthetic_strong/`):** Missingness concentrated selectively in the strongest half of predictors ($\lfloor p/2 \rfloor$), with two-tail removal under MNAR.
+- **Scenario 2 (`results_semisynthetic_strong/`):** Missingness concentrated selectively in the strongest half of predictors ($\lceil p/2 \rceil$), with two-tail removal under MNAR.
 - **Scenario 3 (`results_semisynthetic_mech/`):** Missing values induced across all predictors indiscriminately under MCAR, MAR, and two-tail MNAR.
 
 > 🌐 **Interactive Online Report:** [View the rendered supplementary report directly in your browser](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html) (includes floating table of contents, native ggplot2 boxplots, heatmaps, and highlighted performance tables).

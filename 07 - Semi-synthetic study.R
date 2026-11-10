@@ -44,7 +44,7 @@ source("07 - functions_semisynthetic.R")
 # ------------------------------------------------------------------------------
 # User Configuration
 # ------------------------------------------------------------------------------
-n_cores     <- 4       # Number of CPU cores for parallel execution
+n_cores     <- 13       # Number of CPU cores for parallel execution
 clean_start <- FALSE   # If TRUE, removes previous .rds files and restarts from scratch.
                        # If FALSE, uses fault-tolerant checkpoints (skips finished tasks).
 
@@ -53,7 +53,7 @@ clean_start <- FALSE   # If TRUE, removes previous .rds files and restarts from 
 #   2 = Two-tail in strong predictors   (Exploratory sensitivity, R = 10)
 #   3 = Two-tail across all predictors  (Exploratory baseline,    R = 10)
 # Examples: 1:3 (runs all), 1 (runs only main paper), c(2, 3) (runs exploratory)
-run_scenarios <- 1:3
+run_scenarios <- 3:1
 
 # ------------------------------------------------------------------------------
 # Scenarios Definition
