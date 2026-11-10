@@ -2,7 +2,7 @@
 
 Code for the PRTree-related papers: comparison of PRTree and CART on regression datasets with missing values.
 
-> **Status:** work in progress. Only the scripts below have been reviewed and published; the remaining analysis scripts will be added after review.
+> **Status:** All core analysis scripts for the paper (01 through 07), empirical diagnostics, and exploratory supplementary materials have been reviewed and published.
 
 Run the scripts from the repository root.
 
@@ -28,6 +28,8 @@ Scripts used to produce the results of the paper.
 | `06 - Summaries.R` | Generates the LaTeX code for Table 1 (`tab:datasets`) in the paper, computing sample size ($n$), number of numerical predictors ($p$), response range, global missingness percentage ($m_{global}$), and number/percentage of observations with missing values ($n_{miss}$). |
 | `06 - Summaries - boxplots.R` | Reads consolidated results from `results/prtree_cart_raw.rds` and produces: (1) `delta_boxplots.pdf` (Figure 1 in paper), showing the relative error $\Delta = (\text{RMSE}_{\text{PRTree}} - \text{RMSE}_{\text{CART}}) / \text{RMSE}_{\text{CART}}$ across fill types; and (2) `heatmaps.pdf` (Figure 2 in paper), a 2D grid displaying PRTree win rates against CART for all specification combinations across datasets. |
 | `06 - summary times.R` | Parses execution logs (`results/*.log`) to evaluate computational cost. Outputs: (1) LaTeX code for Table 2 (`tab:runtime`) in the paper (CART runtime, total and range of PRTree runtimes); and (2) `heatmapsTime.pdf` (Figure 3 in paper), displaying execution time in minutes per configuration. |
+| `07 - functions_semisynthetic.R` | Shared helper functions for the semi-synthetic simulation studies (data loading, missingness injection mechanisms, imputation pipelines, model fitting, parallel execution with checkpointing, and summary table/figure generation). Not meant to be run directly. |
+| `07 - Semi-synthetic study.R` | Master semi-synthetic simulation runner. Orchestrates the main paper's Section 6 study (`results_semisynthetic_upper/`, $R=100$) and/or the supplementary exploratory sensitivity studies (`results_semisynthetic_strong/`, `results_semisynthetic_mech/`, $R=10$). Fully parallelized and checkpointed. Produces raw results, summary tables (Tables 3 & 4 in paper), and figures (Figures 4, 5 & 6 in paper). |
 
 ### Functions in `03 - functions.R`
 
@@ -46,15 +48,15 @@ The `config` argument of these functions is the object created by `PRTree::pr_tr
 ## Supplementary material: Exploratory Semi-Synthetic Studies
 
 Exploratory studies conducted to assess PRTree performance under different missingness patterns prior to the final specification in Section 6 of the paper:
-- **Study 07 (`results_semisynthetic_mech`):** Missing values induced across all predictors indiscriminately under MCAR, MAR, and two-tail MNAR.
-- **Study 08 (`results_semisynthetic_strong`):** Missingness concentrated selectively in the strongest half of predictors ($\lfloor p/2 \rfloor$), with two-tail removal under MNAR.
+- **Scenario 2 (`results_semisynthetic_strong/`):** Missingness concentrated selectively in the strongest half of predictors ($\lfloor p/2 \rfloor$), with two-tail removal under MNAR.
+- **Scenario 3 (`results_semisynthetic_mech/`):** Missing values induced across all predictors indiscriminately under MCAR, MAR, and two-tail MNAR.
 
 > 🌐 **Interactive Online Report:** [View the rendered supplementary report directly in your browser](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html) (includes floating table of contents, native ggplot2 boxplots, heatmaps, and highlighted performance tables).
 
 | File | Description |
 |---|---|
-| `Supplementary_semisynthetic_studies.Rmd` | R Markdown source generating the full comparative analysis, native ggplot2 boxplots and heatmaps, and summary tables for Studies 07 and 08. |
-| `Supplementary_semisynthetic_studies.html` | Self-contained, rendered HTML report with floating table of contents. [Open online via htmlpreview](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html). |
+| `Supplementary_semisynthetic_studies.Rmd` | R Markdown source generating the full comparative analysis, native ggplot2 boxplots and heatmaps, and summary tables for the exploratory studies. |
+| `Supplementary_semisynthetic_studies.html` | Self-contained, rendered HTML report with native table of contents. [Open online via htmlpreview](https://htmlpreview.github.io/?https://github.com/tsprass/Codes_PRTree_paper/blob/main/Supplementary_semisynthetic_studies.html). |
 
 ## Data and Results
 
@@ -66,8 +68,9 @@ Exploratory studies conducted to assess PRTree performance under different missi
 | `datasets_tested_not_in_paper.txt` | Record of the datasets that were tested during the project but are not part of the main analysis in the paper. |
 | `results/` | Output from `05 - Run analysis - parallel.R`: per-dataset `.rds` and `.log` files, plus consolidated outputs `prtree_cart_raw.rds` and `prtree_cart_raw.csv`. |
 | `results_garment_wip/` | Output from `05 - Run analysis - Garment wip diagnostics.R`: `Garment_wip_diagnostics.rds` and `.csv` across 6 controlled diagnostic conditions. |
-| `results_semisynthetic_mech/` | Output from Study 07: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
-| `results_semisynthetic_strong/` | Output from Study 08: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
+| `results_semisynthetic_upper/` | Output from `07 - Semi-synthetic study.R`: per-dataset `.rds` files, summary tables (`tab_semisynthetic.tex`, `tab_semisynthetic_time.tex`), and figures (`semisynthetic_boxplots.pdf`, `semisynthetic_heatmaps.pdf`, `semisynthetic_time.pdf`) for Section 6 of the paper. |
+| `results_semisynthetic_mech/` | Output from the exploratory study across all predictors: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
+| `results_semisynthetic_strong/` | Output from the exploratory study with two-tail missingness in strong predictors: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
 
 ## Requirements
 
