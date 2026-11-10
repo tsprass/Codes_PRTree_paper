@@ -1,5 +1,5 @@
 ---
-title: "PRTree: Exploratory Semi-Synthetic Studies (07 & 08)"
+title: "PRTree: Exploratory Semi-Synthetic Studies"
 subtitle: "Sensitivity Analyses: Standard Missingness vs. Two-Tail Selection in Strong Predictors"
 author: "PRTree Paper Project"
 date: "`r Sys.Date()`"
@@ -217,17 +217,17 @@ make_summary_table <- function(st, caption) {
 
 This report compiles the **exploratory semi-synthetic simulation experiments** that served as stepping stones prior to the final specification adopted in Section 6 of the paper (*Upper-Tail MNAR Missingness*):
 
-1. **Study 07 (`results_semisynthetic_mech/`):** Missing values are induced across **all predictors** under standard MCAR, MAR, and two-tail MNAR mechanisms.
-2. **Study 08 (`results_semisynthetic_strong/`):** Missingness is selectively injected into the **strongest predictors** (highest variance / correlation), removing observations from **both tails** (lowest and highest values) under MNAR.
-3. **Relation to Study 09 (Main Paper):** Study 09 refines Study 08 by restricting the MNAR mechanism to the **upper tail only** (simulating detection/saturation thresholds), which represents the most realistic and asymmetric degradation benchmark.
+1. **Scenario 3 (`results_semisynthetic_mech/`):** Missing values are induced across **all predictors** ($p$) under standard MCAR, MAR, and two-tail MNAR mechanisms.
+2. **Scenario 2 (`results_semisynthetic_strong/`):** Missingness is selectively injected into the **strongest predictors** ($\lceil p/2 \rceil$ highest correlation with $y$), removing observations from **both tails** (lowest and highest values) under MNAR.
+3. **Relation to Scenario 1 (Main Paper - Section 6):** Scenario 1 refines Scenario 2 by restricting the MNAR mechanism to the **upper tail only** in the strongest predictors (simulating detection/saturation thresholds), which represents the most realistic and asymmetric degradation benchmark.
 
-Both experiments evaluate the three benchmark datasets with complete covariates (**Auto MPG**, **Ozone**, and **Concrete**) across missingness rates $r \in \{10\%, 25\%, 40\%\}$ over 10 independent replications and 5 folds (50 evaluation runs per condition).
+Both exploratory experiments evaluate the three benchmark datasets with complete covariates (**Auto MPG**, **Ozone**, and **Concrete**) across missingness rates $r \in \{10\%, 25\%, 40\%\}$ over 10 independent replications and 5 folds (50 evaluation runs per condition). Both can be reproduced via `07 - Semi-synthetic study.R`.
 
 ---
 
-## 1. Study 07: Standard Missingness Across All Predictors
+## 1. Exploratory Baseline: Missingness Across All Predictors (Scenario 3)
 
-In this study, missing values were induced across all predictors indiscriminately.
+In this study (`results_semisynthetic_mech/`), missing values were induced across all predictors indiscriminately.
 
 ```{r load_study07}
 st07 <- process_study_data("results_semisynthetic_mech")
@@ -255,15 +255,15 @@ plot_study_heatmaps(st07)
 ```{r table07}
 make_summary_table(
   st07,
-  caption = "Study 07: Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
+  caption = "Scenario 3 (All Predictors): Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
 )
 ```
 
 ---
 
-## 2. Study 08: Missingness in Strong Predictors (Two-Tail MNAR)
+## 2. Sensitivity Analysis: Missingness in Strong Predictors (Scenario 2)
 
-In this study, missingness is concentrated selectively in the **most informative half of the predictors**, removing from **both tails** (lowest and highest observations) under MNAR.
+In this study (`results_semisynthetic_strong/`), missingness is concentrated selectively in the **strongest half of the predictors** ($\lceil p/2 \rceil$), removing observations from **both tails** (lowest and highest values) under MNAR.
 
 ```{r load_study08}
 st08 <- process_study_data("results_semisynthetic_strong")
@@ -286,35 +286,37 @@ plot_study_heatmaps(st08)
 ```{r table08}
 make_summary_table(
   st08,
-  caption = "Study 08: Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
+  caption = "Scenario 2 (Strong Predictors, Two-Tail): Median (IQR) of relative error for top specifications across datasets. Best (lowest) median error in bold."
 )
 ```
 
 ---
 
-## 3. Comparative Synthesis: 07 vs. 08 vs. 09
+## 3. Comparative Synthesis: Exploratory Studies vs. Main Paper
 
-| Dimension | Study 07 (`mech`) | Study 08 (`strong`) | Study 09 (`upper` - Main Paper) |
+| Dimension | Scenario 3 (`mech`) | Scenario 2 (`strong`) | Scenario 1 (`upper` - Main Paper) |
 |:---|:---|:---|:---|
-| **Affected Predictors** | All predictors ($p$) | Strongest $\lfloor p/2 \rfloor$ predictors | Strongest $\lfloor p/2 \rfloor$ predictors |
-| **Fully Observed Predictors** | None (all subject to missingness) | Complementary $\lceil p/2 \rceil$ predictors | Complementary $\lceil p/2 \rceil$ predictors |
+| **Affected Predictors** | All predictors ($p$) | Strongest $\lceil p/2 \rceil$ predictors | Strongest $\lceil p/2 \rceil$ predictors |
+| **Fully Observed Predictors** | None (all subject to missingness) | Complementary $\lfloor p/2 \rfloor$ predictors | Complementary $\lfloor p/2 \rfloor$ predictors |
 | **MAR Deletion Rule** | Bilateral: conditioned on extreme absolute values ($\|Z\|$) of guide variables | Bilateral: conditioned on extreme absolute values ($\|Z\|$) of observed predictors | Unilateral: conditioned on high positive values ($Z$) of observed predictors |
 | **MNAR Deletion Rule** | Two-tail: lowest and highest values removed from each predictor | Two-tail: lowest and highest values removed from strong predictors | Upper-tail only: highest values removed from strong predictors (simulates sensor saturation) |
 | **Role in the Project** | Initial baseline (exploratory) | Sensitivity study (exploratory) | **Published specification (Section 6 of the paper)** |
+| **Replications** | $R = 10$ | $R = 10$ | $R = 100$ |
+| **Runner Script** | `07 - Semi-synthetic study.R` (`run_scenarios = 3`) | `07 - Semi-synthetic study.R` (`run_scenarios = 2`) | `07 - Semi-synthetic study.R` (`run_scenarios = 1`) |
 
 ### Summary of PRTree Performance Across Studies
 
-- **Study 07 (Standard Missingness across All Features):**
+- **Scenario 3 (Standard Missingness across All Features):**
   - `PR-f2` systematically outperforms `CART-surrogate` across all datasets, missingness mechanisms (MCAR, MAR, MNAR), and loss rates ($r \in \{10\%, 25\%, 40\%\}$).
   - Internal missing-data handling (`PR-f2`) achieves competitive RMSE with sophisticated multi-stage imputation (`MICE+PR`, `missForest+PR`), at a fraction of the computational runtime.
   - Performance degrades smoothly as $r$ increases from 10% to 40%, demonstrating solid stability when missingness is diffuse.
 
-- **Study 08 (Missingness in Strong Predictors, Two-Tail MNAR):**
-  - Concentrating missingness in the strongest predictors increases the relative prediction error for all methods compared to Study 07.
+- **Scenario 2 (Missingness in Strong Predictors, Two-Tail MNAR):**
+  - Concentrating missingness in the strongest predictors increases the relative prediction error for all methods compared to Scenario 3.
   - Despite the loss of key signals at both extremes, `PR-f2` preserves predictive accuracy substantially better than `CART-surrogate`.
   - `PR-f2` remains on par with `MICE+PR` and `missForest+PR`, confirming that PRTree does not rely on weaker predictors to compensate for missing information in primary features.
 
-- **Study 09 (Main Paper — Upper-Tail MNAR in Strong Predictors):**
+- **Scenario 1 (Main Paper — Upper-Tail MNAR in Strong Predictors):**
   - Removing only the upper tail introduces severe asymmetric distribution shifts (censoring at high values), which particularly penalizes mean and kNN imputation.
   - `PR-f2` demonstrates clear dominance over CART variants and matches or exceeds computationally heavy imputation pipelines.
   - This progression confirmed the robustness of PRTree under extreme MNAR conditions, which became the cornerstone of Section 6 in the final paper.
