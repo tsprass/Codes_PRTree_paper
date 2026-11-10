@@ -306,17 +306,27 @@ make_summary_table(
 
 ### Summary of PRTree Performance Across Studies
 
-- **Scenario 3 (Standard Missingness across All Features):**
-  - `PR-f2` systematically outperforms `CART-surrogate` across all datasets, missingness mechanisms (MCAR, MAR, MNAR), and loss rates ($r \in \{10\%, 25\%, 40\%\}$).
-  - Internal missing-data handling (`PR-f2`) achieves competitive RMSE with sophisticated multi-stage imputation (`MICE+PR`, `missForest+PR`), at a fraction of the computational runtime.
-  - Performance degrades smoothly as $r$ increases from 10% to 40%, demonstrating solid stability when missingness is diffuse.
+Empirical analysis across the 291,600 total evaluations (24,300 in Scenario 3, 24,300 in Scenario 2, and 243,000 in Scenario 1) yields the following core conclusions:
 
-- **Scenario 2 (Missingness in Strong Predictors, Two-Tail MNAR):**
-  - Concentrating missingness in the strongest predictors increases the relative prediction error for all methods compared to Scenario 3.
-  - Despite the loss of key signals at both extremes, `PR-f2` preserves predictive accuracy substantially better than `CART-surrogate`.
-  - `PR-f2` remains on par with `MICE+PR` and `missForest+PR`, confirming that PRTree does not rely on weaker predictors to compensate for missing information in primary features.
+- **Consistent Dominance over CART (Surrogate Splits):**
+  - `PR-f2` decisively outperforms `CART-surrogate` across all datasets and mechanisms, achieving pairwise win rates of:
+    - **82.8%** in Scenario 3 (All Predictors: Auto 89.6%, Concrete 78.2%, Ozone 80.7%).
+    - **83.0%** in Scenario 2 (Strong Predictors, Two-Tail: Auto 84.2%, Concrete 81.8%, Ozone 82.9%).
+    - **87.4%** in Scenario 1 (Strong Predictors, Upper-Tail: Auto 92.3%, Concrete 81.7%, Ozone 88.2%).
+  - The median relative error degradation ($E = \text{RMSE}/\text{RMSE}_{\text{PR-full}} - 1$) of `PR-f2` is less than half that of `CART-sur` across all conditions (e.g., $E = 0.092$ vs. $0.288$ in Scenario 1; $E = 0.153$ vs. $0.308$ in Scenario 2; $E = 0.111$ vs. $0.262$ in Scenario 3).
 
-- **Scenario 1 (Main Paper — Upper-Tail MNAR in Strong Predictors):**
-  - Removing only the upper tail introduces severe asymmetric distribution shifts (censoring at high values), which particularly penalizes mean and kNN imputation.
-  - `PR-f2` demonstrates clear dominance over CART variants and matches or exceeds computationally heavy imputation pipelines.
-  - This progression confirmed the robustness of PRTree under extreme MNAR conditions, which became the cornerstone of Section 6 in the final paper.
+- **Asymmetric Degradation under MNAR (Why Scenario 1 was Chosen for the Paper):**
+  - **In Scenario 1 (Upper-Tail Sensor Saturation):** `PR-f2` achieves a median relative error under MNAR of **$E = 0.046$**, ranking **#1 overall among all 18 evaluated methods**—surpassing `MICE+PR` ($0.079$), `kNN+PR` ($0.103$), `missForest+PR` ($0.152$), and `CART-sur` ($0.276$). Because upper-tail truncation severely breaks the distributional symmetry assumed by imputation algorithms, PRTree's internal localized distribution estimates provide superior robustness without distortion.
+  - **In Scenario 2 (Two-Tail Deletion in Strong Predictors):** Concentrating missingness in the strongest predictors increases the overall degradation ($E = 0.153$ for `PR-f2` vs. $0.308$ for `CART-sur`). Under two-tail MNAR, `PR-f2` achieves $E = 0.209$ vs. $0.348$ for `CART-sur`, demonstrating substantial protection against severe information loss in primary features.
+  - **In Scenario 3 (Diffuse Missingness Across All Features):** Degradation is moderate ($E = 0.111$ for `PR-f2` vs. $0.262$ for `CART-sur`), confirming stable behavior when missingness is dispersed across many weak and strong features.
+
+- **Internal PRTree Fill Types Hierarchy:**
+  - Across all three scenarios, `PR-f2` (`fill_type = 2`, localized Gaussian smoothing) systematically outperforms `PR-f1` (`fill_type = 1`, weight redistribution) and `PR-f0` (`fill_type = 0`, proxy substitution).
+  - Overall median relative error across scenarios:
+    - **Scenario 3:** `PR-f2` ($0.111$) < `PR-f1` ($0.198$) < `PR-f0` ($0.216$).
+    - **Scenario 2:** `PR-f2` ($0.153$) < `PR-f1` ($0.250$) < `PR-f0` ($0.303$).
+    - **Scenario 1:** `PR-f2` ($0.092$) < `PR-f0` ($0.188$) < `PR-f1` ($0.208$).
+
+- **Accuracy vs. Computational Efficiency:**
+  - While iterative chained equations (`MICE+PR`) and non-parametric random forests (`missForest+PR`) obtain competitive accuracy under MCAR and MAR, they impose runtimes 100 to 500 times higher than PRTree.
+  - `PR-f2` processes folds in under 0.05 seconds, delivering a 2-to-3 orders of magnitude speedup over external imputation pipelines while simultaneously achieving the highest accuracy under realistic MNAR degradation.
