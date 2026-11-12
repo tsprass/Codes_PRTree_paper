@@ -1,0 +1,91 @@
+"dataset","mech","competitor","est","lo","hi"
+"Auto MPG","MCAR","CART-sur",0.926,0.913,0.939
+"Auto MPG","MCAR","MICE+CART",0.782,0.76,0.803
+"Auto MPG","MCAR","MICE+PR",0.167,0.149,0.185
+"Auto MPG","MCAR","MICE1+PR",0.377,0.352,0.403
+"Auto MPG","MCAR","MICEavg+PR",0.356,0.331,0.379
+"Auto MPG","MCAR","PR-f0",0.911,0.894,0.926
+"Auto MPG","MCAR","PR-f1",0.785,0.764,0.807
+"Auto MPG","MCAR","kNN+PR",0.339,0.315,0.363
+"Auto MPG","MCAR","mean+PR",0.583,0.556,0.609
+"Auto MPG","MCAR","missForest+PR",0.357,0.332,0.382
+"Auto MPG","MAR","CART-sur",0.875,0.857,0.891
+"Auto MPG","MAR","MICE+CART",0.635,0.611,0.662
+"Auto MPG","MAR","MICE+PR",0.119,0.103,0.135
+"Auto MPG","MAR","MICE1+PR",0.432,0.407,0.459
+"Auto MPG","MAR","MICEavg+PR",0.315,0.292,0.338
+"Auto MPG","MAR","PR-f0",0.877,0.859,0.894
+"Auto MPG","MAR","PR-f1",0.788,0.767,0.808
+"Auto MPG","MAR","kNN+PR",0.277,0.254,0.299
+"Auto MPG","MAR","mean+PR",0.706,0.684,0.729
+"Auto MPG","MAR","missForest+PR",0.432,0.405,0.458
+"Auto MPG","MNAR","CART-sur",0.967,0.957,0.975
+"Auto MPG","MNAR","MICE+CART",0.937,0.925,0.949
+"Auto MPG","MNAR","MICE+PR",0.644,0.61,0.677
+"Auto MPG","MNAR","MICE1+PR",0.791,0.763,0.816
+"Auto MPG","MNAR","MICEavg+PR",0.736,0.705,0.763
+"Auto MPG","MNAR","PR-f0",0.695,0.669,0.723
+"Auto MPG","MNAR","PR-f1",0.712,0.688,0.737
+"Auto MPG","MNAR","kNN+PR",0.673,0.645,0.703
+"Auto MPG","MNAR","mean+PR",0.795,0.771,0.817
+"Auto MPG","MNAR","missForest+PR",0.805,0.776,0.833
+"Ozone","MCAR","CART-sur",0.831,0.813,0.849
+"Ozone","MCAR","MICE+CART",0.741,0.72,0.763
+"Ozone","MCAR","MICE+PR",0.222,0.201,0.243
+"Ozone","MCAR","MICE1+PR",0.415,0.39,0.439
+"Ozone","MCAR","MICEavg+PR",0.393,0.368,0.417
+"Ozone","MCAR","PR-f0",0.668,0.643,0.693
+"Ozone","MCAR","PR-f1",0.724,0.703,0.747
+"Ozone","MCAR","kNN+PR",0.401,0.376,0.427
+"Ozone","MCAR","mean+PR",0.502,0.475,0.529
+"Ozone","MCAR","missForest+PR",0.407,0.381,0.431
+"Ozone","MAR","CART-sur",0.863,0.845,0.881
+"Ozone","MAR","MICE+CART",0.702,0.678,0.727
+"Ozone","MAR","MICE+PR",0.208,0.188,0.227
+"Ozone","MAR","MICE1+PR",0.435,0.409,0.461
+"Ozone","MAR","MICEavg+PR",0.419,0.395,0.445
+"Ozone","MAR","PR-f0",0.66,0.631,0.687
+"Ozone","MAR","PR-f1",0.735,0.711,0.758
+"Ozone","MAR","kNN+PR",0.438,0.411,0.463
+"Ozone","MAR","mean+PR",0.533,0.51,0.558
+"Ozone","MAR","missForest+PR",0.41,0.387,0.435
+"Ozone","MNAR","CART-sur",0.951,0.94,0.961
+"Ozone","MNAR","MICE+CART",0.87,0.853,0.887
+"Ozone","MNAR","MICE+PR",0.557,0.53,0.582
+"Ozone","MNAR","MICE1+PR",0.737,0.713,0.761
+"Ozone","MNAR","MICEavg+PR",0.729,0.707,0.752
+"Ozone","MNAR","PR-f0",0.607,0.581,0.631
+"Ozone","MNAR","PR-f1",0.75,0.727,0.771
+"Ozone","MNAR","kNN+PR",0.659,0.634,0.683
+"Ozone","MNAR","mean+PR",0.873,0.855,0.888
+"Ozone","MNAR","missForest+PR",0.725,0.701,0.749
+"Concrete","MCAR","CART-sur",0.835,0.815,0.853
+"Concrete","MCAR","MICE+CART",0.123,0.105,0.143
+"Concrete","MCAR","MICE+PR",0.021,0.013,0.029
+"Concrete","MCAR","MICE1+PR",0.399,0.373,0.424
+"Concrete","MCAR","MICEavg+PR",0.248,0.224,0.273
+"Concrete","MCAR","PR-f0",0.897,0.878,0.914
+"Concrete","MCAR","PR-f1",0.813,0.791,0.834
+"Concrete","MCAR","kNN+PR",0.2,0.181,0.219
+"Concrete","MCAR","mean+PR",0.635,0.611,0.66
+"Concrete","MCAR","missForest+PR",0.224,0.203,0.245
+"Concrete","MAR","CART-sur",0.74,0.717,0.762
+"Concrete","MAR","MICE+CART",0.13,0.112,0.147
+"Concrete","MAR","MICE+PR",0.056,0.043,0.069
+"Concrete","MAR","MICE1+PR",0.623,0.597,0.648
+"Concrete","MAR","MICEavg+PR",0.361,0.337,0.387
+"Concrete","MAR","PR-f0",0.879,0.86,0.897
+"Concrete","MAR","PR-f1",0.709,0.687,0.729
+"Concrete","MAR","kNN+PR",0.241,0.219,0.263
+"Concrete","MAR","mean+PR",0.751,0.726,0.773
+"Concrete","MAR","missForest+PR",0.207,0.189,0.227
+"Concrete","MNAR","CART-sur",0.875,0.856,0.894
+"Concrete","MNAR","MICE+CART",0.707,0.676,0.737
+"Concrete","MNAR","MICE+PR",0.613,0.561,0.661
+"Concrete","MNAR","MICE1+PR",0.758,0.719,0.795
+"Concrete","MNAR","MICEavg+PR",0.66,0.614,0.703
+"Concrete","MNAR","PR-f0",0.67,0.631,0.709
+"Concrete","MNAR","PR-f1",0.933,0.917,0.948
+"Concrete","MNAR","kNN+PR",0.657,0.61,0.702
+"Concrete","MNAR","mean+PR",0.817,0.789,0.846
+"Concrete","MNAR","missForest+PR",0.673,0.63,0.717

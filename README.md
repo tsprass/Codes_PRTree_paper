@@ -68,9 +68,9 @@ Exploratory studies conducted to assess PRTree performance under different missi
 | `datasets_tested_not_in_paper.txt` | Record of the datasets that were tested during the project but are not part of the main analysis in the paper. |
 | `results/` | Output from `05 - Run analysis - parallel.R`: per-dataset `.rds` and `.log` files, plus consolidated outputs `prtree_cart_raw.rds` and `prtree_cart_raw.csv`. |
 | `results_garment_wip/` | Output from `05 - Run analysis - Garment wip diagnostics.R`: `Garment_wip_diagnostics.rds` and `.csv` across 6 controlled diagnostic conditions. |
-| `results_semisynthetic_upper/` | Output from `07 - Semi-synthetic study.R`: per-dataset `.rds` files, summary tables (`tab_semisynthetic.tex`, `tab_semisynthetic_time.tex`), and figures (`semisynthetic_boxplots.pdf`, `semisynthetic_heatmaps.pdf`, `semisynthetic_time.pdf`) for Section 6 of the paper. |
-| `results_semisynthetic_mech/` | Output from the exploratory study across all predictors: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
-| `results_semisynthetic_strong/` | Output from the exploratory study with two-tail missingness in strong predictors: raw results (`.rds`), figures (`.pdf`), and summary tables (`.tex`). |
+| `results_semisynthetic_upper/` | Output from `07 - Semi-synthetic study.R`: per-dataset `.rds` files, summary tables (`tab_semisynthetic.tex`, `tab_semisynthetic_ci.tex`, `tab_semisynthetic_time.tex`), win rate CIs (`tab_semisynthetic_winci.csv`), and figures (`semisynthetic_boxplots.pdf`, `semisynthetic_heatmaps.pdf`, `semisynthetic_time.pdf`) for Section 6 of the paper. |
+| `results_semisynthetic_mech/` | Output from the exploratory study across all predictors: raw results (`.rds`), figures (`.pdf`), summary tables (`.tex`), and win rate CIs (`.csv`). |
+| `results_semisynthetic_strong/` | Output from the exploratory study with two-tail missingness in strong predictors: raw results (`.rds`), figures (`.pdf`), summary tables (`.tex`), and win rate CIs (`.csv`). |
 
 ## Requirements
 

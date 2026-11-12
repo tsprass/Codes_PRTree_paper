@@ -1,0 +1,91 @@
+"dataset","mech","competitor","est","lo","hi"
+"Auto MPG","MCAR","CART-sur",0.907,0.853,0.953
+"Auto MPG","MCAR","MICE+CART",0.827,0.773,0.88
+"Auto MPG","MCAR","MICE+PR",0.187,0.127,0.247
+"Auto MPG","MCAR","MICE1+PR",0.473,0.387,0.56
+"Auto MPG","MCAR","MICEavg+PR",0.393,0.313,0.467
+"Auto MPG","MCAR","PR-f0",0.847,0.787,0.907
+"Auto MPG","MCAR","PR-f1",0.78,0.707,0.847
+"Auto MPG","MCAR","kNN+PR",0.34,0.253,0.427
+"Auto MPG","MCAR","mean+PR",0.58,0.5,0.66
+"Auto MPG","MCAR","missForest+PR",0.333,0.267,0.407
+"Auto MPG","MAR","CART-sur",0.88,0.82,0.933
+"Auto MPG","MAR","MICE+CART",0.813,0.74,0.88
+"Auto MPG","MAR","MICE+PR",0.253,0.173,0.34
+"Auto MPG","MAR","MICE1+PR",0.527,0.433,0.62
+"Auto MPG","MAR","MICEavg+PR",0.46,0.367,0.567
+"Auto MPG","MAR","PR-f0",0.86,0.78,0.933
+"Auto MPG","MAR","PR-f1",0.767,0.7,0.833
+"Auto MPG","MAR","kNN+PR",0.413,0.34,0.487
+"Auto MPG","MAR","mean+PR",0.533,0.447,0.62
+"Auto MPG","MAR","missForest+PR",0.347,0.28,0.413
+"Auto MPG","MNAR","CART-sur",0.9,0.847,0.947
+"Auto MPG","MNAR","MICE+CART",0.713,0.633,0.793
+"Auto MPG","MNAR","MICE+PR",0.207,0.147,0.267
+"Auto MPG","MNAR","MICE1+PR",0.467,0.4,0.527
+"Auto MPG","MNAR","MICEavg+PR",0.42,0.347,0.5
+"Auto MPG","MNAR","PR-f0",0.873,0.82,0.92
+"Auto MPG","MNAR","PR-f1",0.74,0.687,0.793
+"Auto MPG","MNAR","kNN+PR",0.313,0.24,0.387
+"Auto MPG","MNAR","mean+PR",0.78,0.707,0.853
+"Auto MPG","MNAR","missForest+PR",0.407,0.34,0.48
+"Ozone","MCAR","CART-sur",0.847,0.787,0.907
+"Ozone","MCAR","MICE+CART",0.753,0.693,0.807
+"Ozone","MCAR","MICE+PR",0.28,0.213,0.353
+"Ozone","MCAR","MICE1+PR",0.44,0.367,0.513
+"Ozone","MCAR","MICEavg+PR",0.48,0.4,0.56
+"Ozone","MCAR","PR-f0",0.673,0.6,0.74
+"Ozone","MCAR","PR-f1",0.747,0.687,0.813
+"Ozone","MCAR","kNN+PR",0.413,0.32,0.507
+"Ozone","MCAR","mean+PR",0.507,0.427,0.58
+"Ozone","MCAR","missForest+PR",0.46,0.38,0.533
+"Ozone","MAR","CART-sur",0.827,0.773,0.88
+"Ozone","MAR","MICE+CART",0.76,0.7,0.82
+"Ozone","MAR","MICE+PR",0.233,0.167,0.307
+"Ozone","MAR","MICE1+PR",0.407,0.333,0.48
+"Ozone","MAR","MICEavg+PR",0.42,0.36,0.473
+"Ozone","MAR","PR-f0",0.747,0.66,0.833
+"Ozone","MAR","PR-f1",0.7,0.62,0.773
+"Ozone","MAR","kNN+PR",0.467,0.393,0.54
+"Ozone","MAR","mean+PR",0.473,0.42,0.527
+"Ozone","MAR","missForest+PR",0.427,0.353,0.5
+"Ozone","MNAR","CART-sur",0.747,0.68,0.813
+"Ozone","MNAR","MICE+CART",0.633,0.547,0.713
+"Ozone","MNAR","MICE+PR",0.18,0.12,0.247
+"Ozone","MNAR","MICE1+PR",0.387,0.313,0.46
+"Ozone","MNAR","MICEavg+PR",0.327,0.253,0.407
+"Ozone","MNAR","PR-f0",0.673,0.6,0.753
+"Ozone","MNAR","PR-f1",0.587,0.5,0.673
+"Ozone","MNAR","kNN+PR",0.307,0.227,0.38
+"Ozone","MNAR","mean+PR",0.533,0.453,0.607
+"Ozone","MNAR","missForest+PR",0.34,0.267,0.413
+"Concrete","MCAR","CART-sur",0.807,0.74,0.873
+"Concrete","MCAR","MICE+CART",0.16,0.093,0.233
+"Concrete","MCAR","MICE+PR",0.04,0.013,0.08
+"Concrete","MCAR","MICE1+PR",0.307,0.227,0.393
+"Concrete","MCAR","MICEavg+PR",0.233,0.173,0.293
+"Concrete","MCAR","PR-f0",0.847,0.78,0.913
+"Concrete","MCAR","PR-f1",0.807,0.733,0.867
+"Concrete","MCAR","kNN+PR",0.22,0.16,0.287
+"Concrete","MCAR","mean+PR",0.613,0.527,0.7
+"Concrete","MCAR","missForest+PR",0.14,0.087,0.193
+"Concrete","MAR","CART-sur",0.713,0.64,0.787
+"Concrete","MAR","MICE+CART",0.24,0.167,0.32
+"Concrete","MAR","MICE+PR",0.073,0.027,0.127
+"Concrete","MAR","MICE1+PR",0.52,0.433,0.6
+"Concrete","MAR","MICEavg+PR",0.333,0.247,0.413
+"Concrete","MAR","PR-f0",0.84,0.76,0.913
+"Concrete","MAR","PR-f1",0.82,0.753,0.873
+"Concrete","MAR","kNN+PR",0.293,0.207,0.387
+"Concrete","MAR","mean+PR",0.473,0.38,0.573
+"Concrete","MAR","missForest+PR",0.293,0.2,0.387
+"Concrete","MNAR","CART-sur",0.827,0.76,0.887
+"Concrete","MNAR","MICE+CART",0.1,0.053,0.153
+"Concrete","MNAR","MICE+PR",0.02,0,0.047
+"Concrete","MNAR","MICE1+PR",0.247,0.173,0.32
+"Concrete","MNAR","MICEavg+PR",0.167,0.113,0.227
+"Concrete","MNAR","PR-f0",0.573,0.473,0.667
+"Concrete","MNAR","PR-f1",0.693,0.613,0.773
+"Concrete","MNAR","kNN+PR",0.12,0.073,0.167
+"Concrete","MNAR","mean+PR",0.46,0.373,0.547
+"Concrete","MNAR","missForest+PR",0.153,0.093,0.22

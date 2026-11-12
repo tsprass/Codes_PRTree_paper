@@ -637,13 +637,37 @@ run_semisynthetic_study <- function(design, inject_fn, res_dir, version, n_cores
 # Generates all publication-quality outputs and prints numbers quoted in the text:
 #   - semisynthetic_boxplots.pdf: Figure 4 in the paper (relative RMSE boxplots)
 #   - tab_semisynthetic.tex     : Table 3 in the paper (median & IQR of relative RMSE)
+#   - tab_semisynthetic_ci.tex  : Table 3 with 95% replication-level bootstrap CIs of the medians
+#   - tab_semisynthetic_winci.csv: win rate of PR-f2 against each competitor with 95% bootstrap CIs
 #   - semisynthetic_heatmaps.pdf: Figure 5 in the paper (PR-f2 pairwise win rate heatmaps)
 #   - tab_semisynthetic_time.tex: Table 4 in the paper (runtime per fold & ratio to PR-f2)
 #   - semisynthetic_time.pdf    : Figure 6 in the paper (runtime per fold heatmaps)
 #   - Terminal summaries        : Pairwise ranking, complete-data sanity check,
 #                                 cost-gain ratios, and numbers cited in Section 6.
 # ==============================================================================
-generate_semisynthetic_summaries <- function(design, res_dir, version) {
+
+# Replication-level cluster bootstrap. Each replication draws its own missingness mask and
+# fold partition, so replications are independent whereas the folds of one replication are
+# not. The bootstrap therefore resamples whole replications (keeping all their folds) and
+# returns the percentile interval of stat() over n_boot resamples.
+boot_rep_ci <- function(x, rep, stat, n_boot = 2000, level = 0.95) {
+  idx <- split(x, factor(rep, unique(rep)))
+  n_rep <- length(idx)
+  draws <- matrix(sample.int(n_rep, n_rep * n_boot, replace = TRUE), nrow = n_rep, ncol = n_boot)
+
+  b <- apply(draws, 2, function(i) {
+    stat(unlist(idx[i], use.names = FALSE))
+  })
+
+  alpha <- (1 - level) / 2
+  c(
+    est = stat(x),
+    lo  = unname(quantile(b, alpha)),
+    hi  = unname(quantile(b, 1 - alpha))
+  )
+}
+
+generate_semisynthetic_summaries <- function(design, res_dir, version, n_boot = 2000, seed_boot = 2026) {
   res_file <- function(ds) file.path(res_dir, paste0(ds, ".rds"))
   labels <- c(Auto = "Auto MPG", Ozone = "Ozone", Concrete = "Concrete")
 
@@ -801,6 +825,106 @@ generate_semisynthetic_summaries <- function(design, res_dir, version) {
              file.path(res_dir, "tab_semisynthetic.tex"))
 
   # ----------------------------------------------------------------------------
+  # Table 3 with uncertainty: 95% replication-level bootstrap CIs of the median loss
+  # Same layout as tab_semisynthetic.tex but with three decimals and \best{} instead of \textbf{};
+  # each scenario row is followed by a row with the percentile interval [lo, hi]
+  # of the median (replications resampled as a whole).
+  # ----------------------------------------------------------------------------
+  set.seed(seed_boot)
+
+  ci <- loss %>%
+    filter(method %in% best) %>%
+    group_by(dataset, mech, rate, method) %>%
+    group_modify(~ as.data.frame(as.list(boot_rep_ci(.x$E, .x$rep, median, n_boot)))) %>%
+    ungroup() %>%
+    mutate(
+      method = factor(method, tab_cols),
+      ci     = sprintf("{\\scriptsize [%.3f, %.3f]}", round(lo, 3) + 0, round(hi, 3) + 0)
+    ) %>%
+    select(dataset, mech, rate, method, ci) %>%
+    pivot_wider(names_from = method, values_from = ci)
+
+  # Median (IQR) with three decimals. The best method (lowest median) is wrapped in \best{},
+  # which must be defined in the paper preamble (e.g. \newcommand{\best}[1]{\textbf{#1}}),
+  # so that its emphasis can be changed independently of any other markup in the manuscript.
+  tb3 <- loss %>%
+    filter(method %in% best) %>%
+    group_by(dataset, mech, rate, method) %>%
+    summarise(
+      med = median(E),
+      iqr = IQR(E),
+      .groups = "drop"
+    ) %>%
+    group_by(dataset, mech, rate) %>%
+    mutate(best_m = (med == min(med))) %>%
+    ungroup() %>%
+    mutate(
+      cell = ifelse(
+        best_m,
+        sprintf("\\best{%.3f (%.3f)}", round(med, 3) + 0, round(iqr, 3) + 0),
+        sprintf("%.3f (%.3f)", round(med, 3) + 0, round(iqr, 3) + 0)
+      ),
+      method = factor(method, tab_cols)
+    ) %>%
+    select(dataset, mech, rate, method, cell) %>%
+    pivot_wider(names_from = method, values_from = cell)
+
+  lines_ci <- c()
+  for (ds in levels(tb$dataset)) {
+    sub <- tb %>% filter(dataset == ds)
+    if (nrow(sub) == 0) {
+      next
+    }
+
+    lines_ci <- c(lines_ci, sprintf("\\multicolumn{%d}{l}{\\textit{%s}}\\\\", length(tab_cols) + 3, ds))
+
+    for (i in seq_len(nrow(sub))) {
+      mech <- if (i == 1 || sub$mech[i] != sub$mech[i - 1]) {
+        as.character(sub$mech[i])
+      } else {
+        ""
+      }
+
+      ci_i  <- ci %>% filter(dataset == ds, mech == sub$mech[i], rate == sub$rate[i])
+      tb3_i <- tb3 %>% filter(dataset == ds, mech == sub$mech[i], rate == sub$rate[i])
+
+      row_vals_est <- c(
+        mech,
+        round(100 * sub$rate[i]),
+        sprintf("%.0f", sub$inc[i]),
+        unlist(tb3_i[1, tab_cols])
+      )
+      row_vals_ci <- c(
+        "", "", "",
+        unlist(ci_i[1, tab_cols])
+      )
+
+      lines_ci <- c(
+        lines_ci,
+        paste0(paste(row_vals_est, collapse = " & "), "\\\\"),
+        paste0(paste(row_vals_ci, collapse = " & "), "\\\\")
+      )
+    }
+
+    lines_ci <- c(lines_ci, "\\midrule")
+  }
+  lines_ci[length(lines_ci)] <- "\\bottomrule"
+
+  writeLines(
+    c(
+      sprintf("\\begin{tabular}{llr%s}", strrep("c", length(tab_cols))),
+      "\\toprule",
+      paste0(" & & & ", paste(grp, collapse = " & "), "\\\\"),
+      paste(rules, collapse = " "),
+      paste0("Mech. & $r$ & Inc. & ", paste(hdr[tab_cols], collapse = " & "), "\\\\"),
+      "\\midrule",
+      lines_ci,
+      "\\end{tabular}"
+    ),
+    file.path(res_dir, "tab_semisynthetic_ci.tex")
+  )
+
+  # ----------------------------------------------------------------------------
   # Figure 5: Heatmaps of PRTree (fill_type = 2) Pairwise Win Rate
   # Displays the percentage of folds where PR-f2 achieved lower RMSE than competitor.
   # ----------------------------------------------------------------------------
@@ -825,6 +949,24 @@ generate_semisynthetic_summaries <- function(design, res_dir, version) {
            col = factor(paste0(mech, "\n", 100 * rate, "%"),
                         paste0(rep(design$mechanisms, each = length(design$rates)), "\n",
                                100 * design$rates, "%")))
+
+  # 95% replication-level bootstrap CIs of the win rate of PR-f2 (all rates pooled)
+  win_ci <- w %>%
+    pivot_longer(all_of(comp), names_to = "competitor", values_to = "rmse_c") %>%
+    mutate(win = as.numeric(`PR-f2` < rmse_c)) %>%
+    group_by(dataset, mech, competitor) %>%
+    group_modify(~ as.data.frame(as.list(boot_rep_ci(.x$win, paste(.x$rate, .x$rep), mean, n_boot)))) %>%
+    ungroup() %>%
+    mutate(across(c(est, lo, hi), ~ round(., 3)))
+
+  write.csv(win_ci, file.path(res_dir, "tab_semisynthetic_winci.csv"), row.names = FALSE)
+
+  cat("\nWin rate of PR-f2 with 95% replication-level bootstrap CI (rates pooled):\n")
+  print(
+    win_ci %>% filter(competitor %in% c("MICE+PR", "MICE+CART", "CART-sur", "PR-f0", "PR-f1")),
+    n = 100
+  )
+
   ph <- grid_heatmaps(hw, function(x) ggplot(x, aes(col, competitor, fill = win)) +
                         geom_tile(colour = "white") +
                         geom_text(aes(label = sprintf("%.0f%%", 100 * win)), size = 4.5) +
@@ -938,5 +1080,5 @@ generate_semisynthetic_summaries <- function(design, res_dir, version) {
 
   cat(sprintf("\nOutputs generated successfully in %s:\n", res_dir))
   cat("  - semisynthetic_boxplots.pdf\n  - semisynthetic_heatmaps.pdf\n  - semisynthetic_time.pdf\n")
-  cat("  - tab_semisynthetic.tex\n  - tab_semisynthetic_time.tex\n")
+  cat("  - tab_semisynthetic.tex\n  - tab_semisynthetic_ci.tex\n  - tab_semisynthetic_winci.csv\n  - tab_semisynthetic_time.tex\n")
 }
